@@ -94,7 +94,11 @@ button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .tag-geom{background:var(--purple-soft);color:var(--purple)}
 .tag-sqrt{background:var(--green-soft);color:var(--green)}
 .q-text{font-size:.97rem;font-weight:500;line-height:1.75;margin-bottom:14px;color:var(--text)}
-.q-formula{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:7px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:.88rem;line-height:1.7;color:var(--teal);margin-bottom:18px;white-space:pre-line}
+.q-formula{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:7px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:.88rem;line-height:1.7;color:var(--teal);margin-bottom:0;white-space:pre-line}
+.q-hint-wrap{margin-bottom:18px}
+.q-hint-btn{background:transparent;border:1px dashed var(--teal);border-radius:7px;color:var(--teal);font-family:'Noto Sans JP',sans-serif;font-size:.8rem;padding:7px 16px;cursor:pointer;width:100%;text-align:left;transition:all .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.q-hint-btn:hover{background:var(--teal-soft)}
+.q-hint-body{margin-top:8px;margin-bottom:0}
 .choices{display:flex;flex-direction:column;gap:7px}
 .choice{padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.86rem;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:11px;min-height:48px;width:100%;position:relative;z-index:3}
 .choice-key{width:24px;height:24px;border-radius:5px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text2);flex-shrink:0;transition:all .15s}
@@ -899,8 +903,15 @@ function renderQ(){
   const qtext=document.createElement('div');qtext.className='q-text';qtext.textContent=q.q;
   card.appendChild(qtext);
 
-  const hint=document.createElement('div');hint.className='q-formula';hint.textContent=q.hint;
-  card.appendChild(hint);
+  const hintWrap=document.createElement('div');hintWrap.className='q-hint-wrap';
+  const hintBtn=document.createElement('button');hintBtn.className='q-hint-btn';hintBtn.type='button';hintBtn.textContent='💡 ヒントを見る';
+  const hint=document.createElement('div');hint.className='q-formula q-hint-body';hint.textContent=q.hint;hint.style.display='none';
+  hintBtn.addEventListener('click',function(){
+    if(hint.style.display==='none'){hint.style.display='block';hintBtn.textContent='💡 ヒントを隠す';}
+    else{hint.style.display='none';hintBtn.textContent='💡 ヒントを見る';}
+  });
+  hintWrap.appendChild(hintBtn);hintWrap.appendChild(hint);
+  card.appendChild(hintWrap);
 
   const choicesDiv=document.createElement('div');choicesDiv.className='choices';
   sh.forEach((c,i)=>{
