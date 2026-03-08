@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中学数学 公式完全マスター</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f0e17;--surface:#1a1926;--surface2:#23213a;--border:#2e2c47;
+  --text:#e8e6f0;--text2:#9995b3;--accent:#ff6b6b;--teal:#4ecdc4;
+  --gold:#ffd166;--purple:#a78bfa;--green:#6ee7b7;--pink:#f472b6;--orange:#fb923c;
+  --red-soft:#ff6b6b33;--teal-soft:#4ecdc433;--gold-soft:#ffd16633;
+  --purple-soft:#a78bfa33;--green-soft:#6ee7b733;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 15% 25%,rgba(255,255,255,.12) 0%,transparent 100%),radial-gradient(1px 1px at 55% 65%,rgba(255,255,255,.08) 0%,transparent 100%),radial-gradient(1px 1px at 80% 15%,rgba(255,255,255,.1) 0%,transparent 100%),radial-gradient(1px 1px at 35% 85%,rgba(255,255,255,.07) 0%,transparent 100%),radial-gradient(1px 1px at 92% 48%,rgba(255,255,255,.09) 0%,transparent 100%);pointer-events:none;z-index:0}
+
+header{position:sticky;top:0;z-index:100;background:rgba(15,14,23,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:58px}
+.header-title{font-family:'Noto Serif JP',serif;font-weight:900;font-size:1.05rem;letter-spacing:.05em;background:linear-gradient(135deg,var(--gold),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.tab-nav{display:flex;margin-left:24px;gap:2px}
+.tab-btn{padding:6px 16px;background:transparent;border:none;color:var(--text2);font-family:'Noto Sans JP',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;border-radius:6px;transition:all .2s;position:relative}
+.tab-btn::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--gold);transition:width .2s}
+.tab-btn:hover{color:var(--text);background:var(--surface)}
+.tab-btn.active{color:var(--gold)}
+.tab-btn.active::after{width:70%}
+.score-pill{margin-left:auto;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 14px;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--gold);display:flex;align-items:center;gap:6px}
+.score-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.view{display:none;position:relative;z-index:1}
+.view.active{display:block}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.choice{-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.qcat-btn{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tab-btn{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+#view-ref{max-width:960px;margin:0 auto;padding:32px 20px 80px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:36px}
+.section-header:first-child{margin-top:0}
+.section-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.section-title{font-family:'Noto Serif JP',serif;font-weight:700;font-size:1.1rem;letter-spacing:.04em}
+
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:10px;margin-bottom:8px}
+.formula-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px 18px;transition:all .2s;position:relative;overflow:hidden}
+.formula-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;border-radius:11px 0 0 11px}
+.formula-card.c-red::before{background:var(--accent)}
+.formula-card.c-teal::before{background:var(--teal)}
+.formula-card.c-gold::before{background:var(--gold)}
+.formula-card.c-purple::before{background:var(--purple)}
+.formula-card.c-green::before{background:var(--green)}
+.formula-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.45);border-color:#3e3c5a}
+.formula-card.wide{grid-column:1/-1}
+
+.fc-label{font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--text2);margin-bottom:7px}
+.fc-formula{font-family:'DM Mono',monospace;font-size:.9rem;line-height:1.65;color:var(--text);margin-bottom:9px;white-space:pre-line}
+.fc-formula .hl{color:var(--gold);font-weight:500}
+.fc-formula .hl2{color:var(--teal)}
+.fc-formula .hl3{color:var(--accent)}
+.fc-formula .hl4{color:var(--green)}
+.fc-note{font-size:.73rem;color:var(--text2);line-height:1.65;border-top:1px solid var(--border);padding-top:7px;margin-top:1px}
+.fc-with-fig{display:flex;gap:12px;align-items:flex-start}
+.fc-fig{flex-shrink:0;opacity:.93}
+.fc-body{flex:1;min-width:0}
+
+.cond-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.cond-list li{display:flex;align-items:flex-start;gap:7px;font-size:.8rem;line-height:1.5}
+.cond-list li::before{content:'①';font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold);flex-shrink:0;margin-top:1px}
+.cond-list li:nth-child(2)::before{content:'②'}
+.cond-list li:nth-child(3)::before{content:'③'}
+.cond-list li:nth-child(4)::before{content:'④'}
+.cond-list li:nth-child(5)::before{content:'⑤'}
+
+.mnemonic{background:var(--gold-soft);border:1px solid rgba(255,209,102,.3);border-radius:6px;padding:6px 10px;font-size:.76rem;color:var(--gold);margin-top:6px;font-weight:500;line-height:1.5}
+
+/* QUIZ */
+#view-quiz{max-width:660px;margin:0 auto;padding:28px 20px 80px;position:relative;z-index:2}
+.quiz-meta{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.q-progress-wrap{flex:1;height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.q-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:4px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.q-counter{font-family:'DM Mono',monospace;font-size:.73rem;color:var(--text2);white-space:nowrap}
+.quiz-cats{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px}
+.qcat-btn{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.72rem;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all .15s}
+.qcat-btn:hover{border-color:var(--gold);color:var(--gold)}
+.qcat-btn.active{background:var(--gold);border-color:var(--gold);color:var(--bg);font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:26px 26px 22px;margin-bottom:14px;animation:cardIn .35s cubic-bezier(.4,0,.2,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.q-cat-tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:11px}
+.tag-calc{background:var(--red-soft);color:var(--accent)}
+.tag-eq{background:var(--gold-soft);color:var(--gold)}
+.tag-func{background:var(--teal-soft);color:var(--teal)}
+.tag-geom{background:var(--purple-soft);color:var(--purple)}
+.tag-sqrt{background:var(--green-soft);color:var(--green)}
+.q-text{font-size:.97rem;font-weight:500;line-height:1.75;margin-bottom:14px;color:var(--text)}
+.q-formula{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:7px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:.88rem;line-height:1.7;color:var(--teal);margin-bottom:18px;white-space:pre-line}
+.choices{display:flex;flex-direction:column;gap:7px}
+.choice{padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.86rem;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:11px;min-height:48px;width:100%;position:relative;z-index:3}
+.choice-key{width:24px;height:24px;border-radius:5px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text2);flex-shrink:0;transition:all .15s}
+.choice:hover:not(:disabled){border-color:var(--gold);background:#23213a;transform:translateX(3px)}
+.choice:hover:not(:disabled) .choice-key{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.choice.correct{border-color:var(--green);background:rgba(110,231,183,.08);color:var(--green)}
+.choice.correct .choice-key{background:var(--green);border-color:var(--green);color:var(--bg)}
+.choice.wrong{border-color:var(--accent);background:rgba(255,107,107,.08);color:var(--accent);opacity:.7}
+.choice.wrong .choice-key{background:var(--accent);border-color:var(--accent);color:white}
+.choice:disabled{cursor:default}
+.explain-box{border-radius:9px;padding:13px 16px;font-size:.8rem;line-height:1.8;margin-top:10px;display:none;animation:fadeIn .3s ease;white-space:pre-line}
+.explain-box.show{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.explain-box.ok{background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.3);color:var(--green)}
+.explain-box.ng{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.3);color:#ffaaaa}
+.explain-header{font-weight:700;font-size:.83rem;margin-bottom:5px}
+.btn-next{width:100%;padding:13px;background:linear-gradient(135deg,#2d2b45,#3a3858);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s;display:none;letter-spacing:.04em}
+.btn-next:hover{background:linear-gradient(135deg,var(--teal),#2eb0a8);color:var(--bg);border-color:var(--teal);box-shadow:0 4px 18px rgba(78,205,196,.25)}
+.btn-next.show{display:block}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:44px 32px;text-align:center;animation:cardIn .4s ease;display:none}
+.result-card.show{display:block}
+.result-ring{width:120px;height:120px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;position:relative;background:conic-gradient(var(--teal) var(--pct),var(--surface2) 0)}
+.result-ring::before{content:'';position:absolute;inset:9px;background:var(--surface);border-radius:50%}
+.result-score-inner{position:relative;z-index:1;font-family:'DM Mono',monospace;font-size:1.9rem;font-weight:500;color:var(--gold)}
+.result-msg{font-family:'Noto Serif JP',serif;font-size:1.25rem;font-weight:700;margin-bottom:7px}
+.result-sub{color:var(--text2);font-size:.83rem;margin-bottom:28px}
+.result-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.rbtn{padding:10px 22px;border-radius:9px;font-family:'Noto Sans JP',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;transition:all .2s;border:1px solid var(--border)}
+.rbtn-primary{background:linear-gradient(135deg,var(--gold),#f0b429);color:var(--bg);border-color:var(--gold)}
+.rbtn-primary:hover{box-shadow:0 4px 18px rgba(255,209,102,.3);transform:translateY(-2px)}
+.rbtn-secondary{background:var(--surface2);color:var(--text)}
+.rbtn-secondary:hover{border-color:var(--text2);transform:translateY(-2px)}
+@media(max-width:600px){
+  header{padding:0 14px}
+  .tab-btn{padding:5px 10px;font-size:.75rem}
+  .header-title{font-size:.88rem}
+  #view-ref,#view-quiz{padding:20px 14px 60px}
+  .formula-grid{grid-template-columns:1fr}
+  .q-card{padding:18px 16px 16px}
+  .fc-with-fig{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">数学公式マスター</div>
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchView('ref')">📖 公式一覧</button>
+    <button class="tab-btn" onclick="switchView('quiz')">⚡ クイズ</button>
+  </nav>
+  <div class="score-pill"><div class="score-dot"></div><span id="headerScore">0 / 0</span></div>
+</header>
+
+<div id="view-ref" class="view active">
+
+<!-- ===== 計算 ===== -->
+<div class="section-header">
+  <div class="section-icon" style="background:var(--red-soft)">🔢</div>
+  <div class="section-title" style="color:var(--accent)">計算</div>
+</div>
+<div class="formula-grid">
+  <div class="formula-card c-red">
+    <div class="fc-label">有理化</div>
+    <div class="fc-formula"><span class="hl">1/√a</span> = <span class="hl">√a / a</span></div>
+    <div class="fc-note">分母・分子に同じルートをかける。例）6/√3 = 2√3</div>
+  </div>
+  <div class="formula-card c-red">
+    <div class="fc-label">乗法公式①</div>
+    <div class="fc-formula"><span class="hl">(x+a)(x+b)</span> = x²+<span class="hl">(a+b)</span>x+<span class="hl">ab</span></div>
+    <div class="fc-note">係数は和(a+b)、定数は積(ab)</div>
+  </div>
+  <div class="formula-card c-red">
+    <div class="fc-label">乗法公式② 和と差の積</div>
+    <div class="fc-formula"><span class="hl">(a+b)(a−b)</span> = <span class="hl">a²−b²</span></div>
+    <div class="fc-note">中間項が消えて２乗の差になる</div>
+  </div>
+  <div class="formula-card c-red">
+    <div class="fc-label">乗法公式③ 和の平方</div>
+    <div class="fc-formula"><span class="hl">(a+b)²</span> = <span class="hl">a²+2ab+b²</span></div>
+    <div class="fc-note">真ん中の 2ab を忘れずに！</div>
+  </div>
+  <div class="formula-card c-red">
+    <div class="fc-label">乗法公式④ 差の平方</div>
+    <div class="fc-formula"><span class="hl">(a−b)²</span> = <span class="hl">a²−2ab+b²</span></div>
+    <div class="fc-note">真ん中の符号が「−」になる</div>
+  </div>
+</div>
+
+<!-- ===== √ の近似値・語呂合わせ ===== -->
+<div class="section-header">
+  <div class="section-icon" style="background:var(--green-soft);font-size:.85rem;font-family:'DM Mono',monospace;font-weight:700;color:var(--green)">√</div>
+  <div class="section-title" style="color:var(--green)">√ の近似値・語呂合わせ</div>
+</div>
+<div class="formula-grid">
+
+  <div class="formula-card c-green">
+    <div class="fc-label">√2 ≈ 1.41421356…</div>
+    <div class="fc-formula"><span class="hl4">√2 ≈ 1.41421356…</span></div>
+    <div class="mnemonic">「一夜一夜に 人見頃」<br>ひとよ・ひとよに・ひとみごろ</div>
+    <div class="fc-note">1 . 4 1 4 2 1 3 5 6 …</div>
+  </div>
+
+  <div class="formula-card c-green">
+    <div class="fc-label">√3 ≈ 1.7320508…</div>
+    <div class="fc-formula"><span class="hl4">√3 ≈ 1.7320508…</span></div>
+    <div class="mnemonic">「人並みに おごれや」<br>ひとなみに・おごれや</div>
+    <div class="fc-note">1 . 7 3 2 0 5 … （1.732…）</div>
+  </div>
+
+  <div class="formula-card c-green">
+    <div class="fc-label">√5 ≈ 2.2360679…</div>
+    <div class="fc-formula"><span class="hl4">√5 ≈ 2.2360679…</span></div>
+    <div class="mnemonic">「富士山麓 オウム鳴く」<br>ふじさんろく・おうむなく</div>
+    <div class="fc-note">2 . 2 3 6 0 6 7 9 …</div>
+  </div>
+
+  <div class="formula-card c-green">
+    <div class="fc-label">特別な直角三角形①（45-45-90°）</div>
+    <div class="fc-with-fig">
+      <svg class="fc-fig" width="74" height="74" viewBox="0 0 74 74">
+        <polygon points="10,64 10,14 60,64" fill="#6ee7b712" stroke="#6ee7b7" stroke-width="1.6"/>
+        <polyline points="10,54 20,54 20,64" fill="none" stroke="#4ecdc4" stroke-width="1.3"/>
+        <text x="2"  y="41" font-size="10" fill="#ffd166" font-family="serif">1</text>
+        <text x="33" y="72" font-size="10" fill="#ffd166" font-family="serif">1</text>
+        <text x="28" y="34" font-size="10" fill="#6ee7b7" font-family="serif">√2</text>
+        <text x="34" y="13" font-size="8"  fill="#9995b3">45°</text>
+        <text x="10" y="13" font-size="8"  fill="#9995b3">45°</text>
+      </svg>
+      <div class="fc-body">
+        <div class="fc-formula">1 : 1 : <span class="hl4">√2</span></div>
+        <div class="fc-note">直角二等辺三角形<br>斜辺 = 脚 × √2</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-card c-green">
+    <div class="fc-label">特別な直角三角形②（30-60-90°）</div>
+    <div class="fc-with-fig">
+      <svg class="fc-fig" width="74" height="74" viewBox="0 0 74 74">
+        <polygon points="37,7 10,67 64,67" fill="#6ee7b712" stroke="#6ee7b7" stroke-width="1.6"/>
+        <polyline points="10,57 20,57 20,67" fill="none" stroke="#4ecdc4" stroke-width="1.3"/>
+        <text x="2"  y="40" font-size="9"  fill="#ffd166" font-family="serif">2</text>
+        <text x="34" y="74" font-size="9"  fill="#ffd166" font-family="serif">√3</text>
+        <text x="50" y="41" font-size="9"  fill="#6ee7b7" font-family="serif">1</text>
+        <text x="25" y="7"  font-size="8"  fill="#9995b3">60°</text>
+        <text x="11" y="59" font-size="8"  fill="#9995b3">30°</text>
+      </svg>
+      <div class="fc-body">
+        <div class="fc-formula">1 : <span class="hl4">√3</span> : 2</div>
+        <div class="fc-note">最短辺:中間辺:斜辺<br>= 1 : √3 : 2</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /√ section -->
+
+<!-- ===== 方程式 ===== -->
+<div class="section-header">
+  <div class="section-icon" style="background:var(--gold-soft)">⚖️</div>
+  <div class="section-title" style="color:var(--gold)">方程式</div>
+</div>
+<div class="formula-grid">
+  <div class="formula-card c-gold wide">
+    <div class="fc-label">二次方程式の解の公式</div>
+    <div class="fc-formula">ax²+bx+c=0  →  x = <span class="hl">( −b ± √(b²−4ac) ) / 2a</span></div>
+    <div class="fc-note">b²−4ac を判別式という。負なら実数解なし。例）x²+3x+1=0 → x=(−3±√5)/2</div>
+  </div>
+</div>
+
+<!-- ===== 関数 ===== -->
+<div class="section-header">
+  <div class="section-icon" style="background:var(--teal-soft)">📈</div>
+  <div class="section-title" style="color:var(--teal)">関数</div>
+</div>
+<div class="formula-grid">
+  <div class="formula-card c-teal">
+    <div class="fc-label">比例</div>
+    <div class="fc-formula">y = <span class="hl2">ax</span></div>
+    <div class="fc-note">原点を通る直線。aが傾き。</div>
+  </div>
+  <div class="formula-card c-teal">
+    <div class="fc-label">反比例</div>
+    <div class="fc-formula">y = <span class="hl2">a/x</span></div>
+    <div class="fc-note">グラフは双曲線</div>
+  </div>
+  <div class="formula-card c-teal">
+    <div class="fc-label">一次関数</div>
+    <div class="fc-formula">y = <span class="hl2">ax + b</span></div>
+    <div class="fc-note">a=傾き=変化の割合、b=y切片</div>
+  </div>
+  <div class="formula-card c-teal">
+    <div class="fc-label">y は x² に比例する関数</div>
+    <div class="fc-formula">y = <span class="hl2">ax²</span></div>
+    <div class="fc-note">グラフは放物線。原点を通る。</div>
+  </div>
+  <div class="formula-card c-teal">
+    <div class="fc-label">変化の割合（基本）</div>
+    <div class="fc-formula">= <span class="hl2">yの増加量 / xの増加量</span></div>
+    <div class="fc-note">一次関数では傾き a に等しい</div>
+  </div>
+  <div class="formula-card c-teal">
+    <div class="fc-label">変化の割合（y=ax² 裏ワザ）</div>
+    <div class="fc-formula">= <span class="hl2">a(p + q)</span></div>
+    <div class="fc-note">x が p→q に変化するとき。例）y=2x², x:2→4 → 12</div>
+  </div>
+</div>
+
+<!-- ===== 図形 ===== -->
+<div class="section-header">
+  <div class="section-icon" style="background:var(--purple-soft)">📐</div>
+  <div class="section-title" style="color:var(--purple)">図形</div>
+</div>
+<div class="formula-grid">
+
+<!-- 円 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">円・面積と周長</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <circle cx="35" cy="35" r="26" fill="#a78bfa0e" stroke="#a78bfa" stroke-width="1.7"/>
+      <circle cx="35" cy="35" r="2.2" fill="#a78bfa"/>
+      <line x1="35" y1="35" x2="61" y2="35" stroke="#ffd166" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="46" y="30" font-size="10" fill="#ffd166" font-family="serif" font-style="italic">r</text>
+      <path d="M 61 35 A 26 26 0 0 1 35 9" fill="none" stroke="#4ecdc4" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="53" y="18" font-size="8" fill="#4ecdc4">2πr</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">面積 = <span class="hl">πr²</span>
+周長 = <span class="hl">2πr</span></div>
+      <div class="fc-note">r = 半径</div>
+    </div>
+  </div>
+</div>
+
+<!-- おうぎ形 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">おうぎ形（中心角 a°）</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <path d="M 35 35 L 61 35 A 26 26 0 0 0 35 9 Z" fill="#a78bfa14" stroke="#a78bfa" stroke-width="1.6"/>
+      <circle cx="35" cy="35" r="2.2" fill="#a78bfa"/>
+      <path d="M 49 35 A 14 14 0 0 0 35 21" fill="none" stroke="#ffd166" stroke-width="1.2" stroke-dasharray="2,2"/>
+      <text x="45" y="28" font-size="9" fill="#ffd166" font-style="italic">a°</text>
+      <text x="46" y="33" font-size="9" fill="#4ecdc4" font-style="italic">r</text>
+      <text x="30" y="12" font-size="9" fill="#4ecdc4" font-style="italic">r</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">面積 = πr²×<span class="hl">a/360</span>
+弧長 = 2πr×<span class="hl">a/360</span></div>
+      <div class="fc-note">円全体に割合 a/360 をかける</div>
+    </div>
+  </div>
+</div>
+
+<!-- 円錐の展開図・中心角・表面積 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">円錐の中心角・表面積</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="76" viewBox="0 0 70 76">
+      <polygon points="35,6 12,56 58,56" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.5"/>
+      <ellipse cx="35" cy="56" rx="23" ry="5.5" fill="#a78bfa18" stroke="#a78bfa" stroke-width="1.3"/>
+      <line x1="35" y1="6" x2="58" y2="56" stroke="#ffd166" stroke-width="1.2" stroke-dasharray="2,2"/>
+      <text x="5"  y="34" font-size="9" fill="#ffd166" font-family="serif" font-style="italic">l</text>
+      <text x="42" y="66" font-size="9" fill="#4ecdc4" font-family="serif" font-style="italic">r</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">中心角 = <span class="hl">360×r/l</span>°
+側面積 = <span class="hl">πrl</span>
+底面積 = <span class="hl">πr²</span>
+表面積 = <span class="hl">πrl+πr²</span></div>
+      <div class="fc-note">r=底面半径、l=母線（斜辺）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 柱体 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">柱体（角柱・円柱）の体積</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <rect x="17" y="21" width="36" height="30" rx="2" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.6"/>
+      <ellipse cx="35" cy="21" rx="18" ry="5.5" fill="#a78bfa20" stroke="#a78bfa" stroke-width="1.6"/>
+      <ellipse cx="35" cy="51" rx="18" ry="5.5" fill="none" stroke="#a78bfa60" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <line x1="58" y1="21" x2="58" y2="51" stroke="#ffd166" stroke-width="1.4"/>
+      <polygon points="58,18 56,23 60,23" fill="#ffd166"/>
+      <polygon points="58,54 56,49 60,49" fill="#ffd166"/>
+      <text x="61" y="39" font-size="9" fill="#ffd166" font-style="italic">h</text>
+      <text x="23" y="20" font-size="7.5" fill="#4ecdc4">底面積S</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">V = <span class="hl">S × h</span></div>
+      <div class="fc-note">底面積 × 高さ（そのまま）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 錐体 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">錐体（角錐・円錐）の体積</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="35,9 13,59 57,59" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.6"/>
+      <ellipse cx="35" cy="59" rx="22" ry="5.5" fill="#a78bfa18" stroke="#a78bfa" stroke-width="1.4"/>
+      <line x1="35" y1="9" x2="35" y2="59" stroke="#ffd166" stroke-width="1.4" stroke-dasharray="3,2"/>
+      <text x="37" y="37" font-size="9" fill="#ffd166" font-style="italic">h</text>
+      <rect x="2" y="27" width="22" height="13" rx="4" fill="#ff6b6b1a" stroke="#ff6b6b" stroke-width="1"/>
+      <text x="5"  y="37" font-size="9.5" fill="#ff6b6b" font-weight="bold">×1/3</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">V = <span class="hl">S×h×<span class="hl3">1/3</span></span></div>
+      <div class="fc-note">柱体の <span style="color:var(--accent);font-weight:700">1/3</span>！絶対忘れずに</div>
+    </div>
+  </div>
+</div>
+
+<!-- 球 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">球の表面積・体積</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <defs><radialGradient id="sG" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".3"/><stop offset="100%" stop-color="#a78bfa" stop-opacity=".05"/></radialGradient></defs>
+      <circle cx="35" cy="35" r="25" fill="url(#sG)" stroke="#a78bfa" stroke-width="1.7"/>
+      <ellipse cx="35" cy="35" rx="25" ry="7" fill="none" stroke="#a78bfa50" stroke-width="1" stroke-dasharray="3,2"/>
+      <ellipse cx="35" cy="35" rx="7" ry="25" fill="none" stroke="#a78bfa44" stroke-width="1" stroke-dasharray="3,2"/>
+      <circle cx="35" cy="35" r="2.1" fill="#ffd166"/>
+      <line x1="35" y1="35" x2="60" y2="35" stroke="#ffd166" stroke-width="1.4" stroke-dasharray="3,2"/>
+      <text x="45" y="31" font-size="10" fill="#ffd166" font-style="italic">r</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">表面積 = <span class="hl">4πr²</span>
+体　積 = <span class="hl">4/3 πr³</span></div>
+      <div class="fc-note">語呂：「身の上に心配あるある さんざん踊る」</div>
+    </div>
+  </div>
+</div>
+
+<!-- 三平方 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">三平方の定理</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="13,62 13,17 57,62" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.7"/>
+      <polyline points="13,52 23,52 23,62" fill="none" stroke="#4ecdc4" stroke-width="1.4"/>
+      <text x="4"  y="41" font-size="11" fill="#4ecdc4" font-style="italic">a</text>
+      <text x="33" y="70" font-size="11" fill="#4ecdc4" font-style="italic">b</text>
+      <text x="31" y="33" font-size="11" fill="#ffd166" font-style="italic">c</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">a²+b² = <span class="hl">c²</span>（c は斜辺）</div>
+      <div class="fc-note">ピタゴラス数：(3,4,5)(5,12,13)<br>(8,15,17)</div>
+    </div>
+  </div>
+</div>
+
+<!-- 立体の対角線 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">立体の対角線・2点間の距離</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <rect x="8" y="26" width="34" height="30" fill="#a78bfa0a" stroke="#a78bfa" stroke-width="1.4"/>
+      <polyline points="8,26 23,10 57,10 57,40 42,56" fill="none" stroke="#a78bfa" stroke-width="1.4"/>
+      <line x1="42" y1="10" x2="42" y2="56" stroke="#a78bfa80" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <line x1="8"  y1="26" x2="23" y2="10" stroke="#a78bfa80" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <line x1="8"  y1="56" x2="57" y2="10" stroke="#ffd166" stroke-width="1.7" stroke-dasharray="4,2"/>
+      <text x="21" y="63" font-size="8" fill="#4ecdc4" font-style="italic">a</text>
+      <text x="2"  y="43" font-size="8" fill="#4ecdc4" font-style="italic">b</text>
+      <text x="45" y="25" font-size="8" fill="#4ecdc4" font-style="italic">c</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">直方体対角線
+= <span class="hl">√(a²+b²+c²)</span>
+2点間距離
+= <span class="hl">√(Δx²+Δy²)</span></div>
+      <div class="fc-note">三平方を3次元に拡張</div>
+    </div>
+  </div>
+</div>
+
+<!-- 二等辺三角形 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">二等辺三角形</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="35,7 7,63 63,63" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.6"/>
+      <line x1="20" y1="36" x2="25" y2="33" stroke="#ffd166" stroke-width="1.8"/>
+      <line x1="48" y1="33" x2="53" y2="36" stroke="#ffd166" stroke-width="1.8"/>
+      <path d="M 17 63 A 11 11 0 0 0 8 57" fill="none" stroke="#4ecdc4" stroke-width="1.2"/>
+      <path d="M 53 63 A 11 11 0 0 1 62 57" fill="none" stroke="#4ecdc4" stroke-width="1.2"/>
+      <text x="28" y="21" font-size="8" fill="#ff6b6b">頂角</text>
+      <text x="5"  y="57" font-size="7" fill="#4ecdc4">底角</text>
+      <text x="51" y="57" font-size="7" fill="#4ecdc4">底角</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">定義：<span class="hl">2辺が等しい</span>
+性質：底角が等しい
+　頂角の二等分線⊥底辺</div>
+      <div class="fc-note">なる条件：2辺が等しい / 2角が等しい</div>
+    </div>
+  </div>
+</div>
+
+<!-- 正三角形 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">正三角形</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="35,6 5,63 65,63" fill="#a78bfa10" stroke="#a78bfa" stroke-width="1.6"/>
+      <line x1="19" y1="36" x2="24" y2="33" stroke="#ffd166" stroke-width="1.8"/>
+      <line x1="47" y1="33" x2="52" y2="36" stroke="#ffd166" stroke-width="1.8"/>
+      <line x1="34" y1="64" x2="37" y2="61" stroke="#ffd166" stroke-width="1.8"/>
+      <text x="27" y="19" font-size="8" fill="#4ecdc4">60°</text>
+      <text x="5"  y="59" font-size="8" fill="#4ecdc4">60°</text>
+      <text x="50" y="59" font-size="8" fill="#4ecdc4">60°</text>
+      <line x1="35" y1="6" x2="35" y2="63" stroke="#ff6b6b" stroke-width="1.1" stroke-dasharray="3,2"/>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">定義：<span class="hl">3辺が等しい</span>
+全内角 = <span class="hl">60°</span>
+高さ = <span class="hl">√3/2 × a</span>
+面積 = <span class="hl">√3/4 × a²</span></div>
+      <div class="fc-note">a = 1辺の長さ</div>
+    </div>
+  </div>
+</div>
+
+<!-- 特殊な平行四辺形の定義 -->
+<div class="formula-card c-purple wide">
+  <div class="fc-label">特殊な平行四辺形の定義</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px">
+    <div>
+      <svg width="100%" height="62" viewBox="0 0 100 62">
+        <rect x="8" y="9" width="84" height="44" fill="#4ecdc412" stroke="#4ecdc4" stroke-width="1.6" rx="2"/>
+        <polyline points="8,19 18,19 18,9"   fill="none" stroke="#ffd166" stroke-width="1.2"/>
+        <polyline points="82,9 82,19 92,19"  fill="none" stroke="#ffd166" stroke-width="1.2"/>
+        <polyline points="8,43 18,43 18,53"  fill="none" stroke="#ffd166" stroke-width="1.2"/>
+        <polyline points="82,43 82,53 92,53" fill="none" stroke="#ffd166" stroke-width="1.2"/>
+      </svg>
+      <div style="font-size:.72rem;color:var(--teal);font-weight:700;margin:4px 0 3px">長方形</div>
+      <div style="font-size:.73rem;color:var(--text2);line-height:1.5">4角がすべて直角<br>対角線の長さが等しい</div>
+    </div>
+    <div>
+      <svg width="100%" height="62" viewBox="0 0 100 62">
+        <polygon points="50,7 92,31 50,55 8,31" fill="#ff6b6b12" stroke="#ff6b6b" stroke-width="1.6"/>
+        <line x1="70" y1="18" x2="73" y2="21" stroke="#ffd166" stroke-width="1.6"/>
+        <line x1="72" y1="41" x2="69" y2="44" stroke="#ffd166" stroke-width="1.6"/>
+        <line x1="30" y1="18" x2="27" y2="21" stroke="#ffd166" stroke-width="1.6"/>
+        <line x1="28" y1="41" x2="31" y2="44" stroke="#ffd166" stroke-width="1.6"/>
+        <line x1="8"  y1="31" x2="92" y2="31" stroke="#4ecdc480" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="50" y1="7"  x2="50" y2="55" stroke="#4ecdc480" stroke-width="1" stroke-dasharray="3,2"/>
+      </svg>
+      <div style="font-size:.72rem;color:var(--accent);font-weight:700;margin:4px 0 3px">ひし形</div>
+      <div style="font-size:.73rem;color:var(--text2);line-height:1.5">4辺がすべて等しい<br>対角線が垂直に交わる</div>
+    </div>
+    <div>
+      <svg width="100%" height="62" viewBox="0 0 100 62">
+        <rect x="18" y="7" width="64" height="48" fill="#ffd16612" stroke="#ffd166" stroke-width="1.6" rx="2"/>
+        <polyline points="18,17 28,17 28,7"   fill="none" stroke="#ffd166" stroke-width="1.2"/>
+        <polyline points="72,7 72,17 82,17"   fill="none" stroke="#ffd166" stroke-width="1.2"/>
+        <line x1="49" y1="8"  x2="52" y2="8"  stroke="#ff6b6b" stroke-width="2"/>
+        <line x1="49" y1="55" x2="52" y2="55" stroke="#ff6b6b" stroke-width="2"/>
+        <line x1="18" y1="30" x2="18" y2="33" stroke="#ff6b6b" stroke-width="2"/>
+        <line x1="82" y1="30" x2="82" y2="33" stroke="#ff6b6b" stroke-width="2"/>
+        <line x1="18" y1="7"  x2="82" y2="55" stroke="#a78bfa60" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="82" y1="7"  x2="18" y2="55" stroke="#a78bfa60" stroke-width="1" stroke-dasharray="3,2"/>
+      </svg>
+      <div style="font-size:.72rem;color:var(--gold);font-weight:700;margin:4px 0 3px">正方形</div>
+      <div style="font-size:.73rem;color:var(--text2);line-height:1.5">4角が直角 かつ 4辺が等しい<br>対角線が等しく垂直二等分</div>
+    </div>
+  </div>
+</div>
+
+<!-- 平行四辺形 性質/条件 -->
+<div class="formula-card c-purple wide">
+  <div class="fc-label">平行四辺形の性質 / なるための条件</div>
+  <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:14px;align-items:start;margin-top:6px">
+    <svg width="78" height="76" viewBox="0 0 78 76">
+      <polygon points="12,65 26,18 66,18 52,65" fill="#a78bfa12" stroke="#a78bfa" stroke-width="1.6"/>
+      <line x1="12" y1="65" x2="66" y2="18" stroke="#4ecdc4" stroke-width="1.2" stroke-dasharray="3,2"/>
+      <line x1="26" y1="18" x2="52" y2="65" stroke="#4ecdc4" stroke-width="1.2" stroke-dasharray="3,2"/>
+      <circle cx="39" cy="41.5" r="2.8" fill="#4ecdc4"/>
+      <text x="36" y="13" font-size="9" fill="#ffd166">→</text>
+      <text x="23" y="71" font-size="9" fill="#ffd166">→</text>
+      <line x1="16" y1="43" x2="21" y2="40" stroke="#ff6b6b" stroke-width="1.6"/>
+      <line x1="56" y1="40" x2="61" y2="43" stroke="#ff6b6b" stroke-width="1.6"/>
+    </svg>
+    <div>
+      <div style="font-size:.7rem;color:var(--text2);margin-bottom:5px;font-weight:700">性質（平行四辺形ならば）</div>
+      <ul class="cond-list">
+        <li>2組の対辺がそれぞれ等しい</li>
+        <li>2組の対角がそれぞれ等しい</li>
+        <li>対角線が中点で交わる</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:.7rem;color:var(--text2);margin-bottom:5px;font-weight:700">なるための条件（5つ）</div>
+      <ul class="cond-list">
+        <li>2組の対辺がそれぞれ平行</li>
+        <li>2組の対辺がそれぞれ等しい</li>
+        <li>2組の対角がそれぞれ等しい</li>
+        <li>対角線が中点で交わる</li>
+        <li>1組の対辺が平行かつ等しい</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 合同・相似条件 -->
+<div class="formula-card c-purple wide">
+  <div class="fc-label">三角形の合同条件 / 相似条件</div>
+  <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:14px;align-items:start;margin-top:6px">
+    <svg width="80" height="78" viewBox="0 0 80 78">
+      <polygon points="10,72 10,20 52,72" fill="#a78bfa14" stroke="#a78bfa" stroke-width="1.6"/>
+      <line x1="10" y1="46" x2="16" y2="43" stroke="#ffd166" stroke-width="1.5"/>
+      <line x1="31" y1="47" x2="31" y2="53" stroke="#4ecdc4" stroke-width="1.5"/>
+      <line x1="25" y1="72" x2="25" y2="66" stroke="#ff6b6b" stroke-width="1.5"/>
+      <polygon points="54,72 54,42 72,72" fill="#ffd16818" stroke="#ffd168" stroke-width="1.3" stroke-dasharray="4,2"/>
+      <text x="4"  y="16" font-size="8" fill="#a78bfa">合同≅</text>
+      <text x="50" y="38" font-size="8" fill="#ffd166">相似∽</text>
+    </svg>
+    <div>
+      <div style="font-size:.7rem;color:var(--text2);margin-bottom:5px;font-weight:700">合同条件（≅）</div>
+      <ul class="cond-list">
+        <li>3辺がそれぞれ等しい</li>
+        <li>2辺とその間の角が等しい</li>
+        <li>1辺とその両端の角が等しい</li>
+      </ul>
+      <div style="font-size:.7rem;color:var(--text2);margin:8px 0 5px;font-weight:700">直角三角形の合同条件</div>
+      <ul class="cond-list">
+        <li>斜辺と他の一辺が等しい</li>
+        <li>斜辺と1つの鋭角が等しい</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:.7rem;color:var(--text2);margin-bottom:5px;font-weight:700">相似条件（∽）</div>
+      <ul class="cond-list">
+        <li>3辺の比がすべて等しい</li>
+        <li>2辺の比とその間の角が等しい</li>
+        <li>2角がそれぞれ等しい</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 中点連結定理 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">中点連結定理</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="35,5 7,65 63,65" fill="#a78bfa0d" stroke="#a78bfa" stroke-width="1.5"/>
+      <circle cx="21" cy="35" r="3" fill="#ffd166"/>
+      <circle cx="49" cy="35" r="3" fill="#ffd166"/>
+      <line x1="21" y1="35" x2="49" y2="35" stroke="#ffd166" stroke-width="2.2"/>
+      <line x1="7"  y1="65" x2="63" y2="65" stroke="#4ecdc4" stroke-width="2.2"/>
+      <text x="14" y="31" font-size="8" fill="#ffd166">M</text>
+      <text x="51" y="31" font-size="8" fill="#ffd166">N</text>
+      <text x="1"  y="66" font-size="8" fill="#4ecdc4">B</text>
+      <text x="64" y="66" font-size="8" fill="#4ecdc4">C</text>
+      <text x="32" y="4"  font-size="8" fill="#a78bfa">A</text>
+      <text x="31" y="33" font-size="8" fill="#ffd166">→</text>
+      <text x="31" y="63" font-size="8" fill="#4ecdc4">→</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">MN ∥ BC
+MN = <span class="hl">BC / 2</span></div>
+      <div class="fc-note">M,N が AB,AC の中点のとき</div>
+    </div>
+  </div>
+</div>
+
+<!-- 角の二等分線 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">角の二等分線と辺の比</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="8,63 8,10 60,63" fill="#a78bfa0d" stroke="#a78bfa" stroke-width="1.5"/>
+      <line x1="8" y1="10" x2="38" y2="63" stroke="#ffd166" stroke-width="1.6" stroke-dasharray="4,2"/>
+      <path d="M 8 22 A 12 12 0 0 1 16 18" fill="none" stroke="#4ecdc4" stroke-width="1.2"/>
+      <path d="M 12 28 A 12 12 0 0 1 20 25" fill="none" stroke="#4ecdc4" stroke-width="1.2"/>
+      <text x="2"  y="9"  font-size="8.5" fill="#a78bfa">A</text>
+      <text x="2"  y="67" font-size="8.5" fill="#a78bfa">B</text>
+      <text x="62" y="67" font-size="8.5" fill="#a78bfa">C</text>
+      <text x="35" y="67" font-size="8.5" fill="#ffd166">D</text>
+      <text x="2"  y="39" font-size="7.5" fill="#4ecdc4">AB</text>
+      <text x="40" y="51" font-size="7.5" fill="#ff6b6b">AC</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">BD : DC = <span class="hl">AB : AC</span></div>
+      <div class="fc-note">△ABC の角A の二等分線が BC と交わる点 D について</div>
+    </div>
+  </div>
+</div>
+
+<!-- 面積比・体積比 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">相似比・面積比・体積比</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="7,65 44,65 26,18" fill="#a78bfa15" stroke="#a78bfa" stroke-width="1.6"/>
+      <polygon points="29,65 46,65 38,44" fill="#ffd16620" stroke="#ffd166" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <text x="2"  y="15" font-size="7.5" fill="#a78bfa">m:n</text>
+      <text x="2"  y="25" font-size="7"   fill="#4ecdc4">面積→m²:n²</text>
+      <text x="2"  y="35" font-size="7"   fill="#ff6b6b">体積→m³:n³</text>
+      <text x="20" y="70" font-size="8"   fill="#a78bfa">m</text>
+      <text x="35" y="70" font-size="8"   fill="#ffd166">n</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">相似比 m:n
+→ 面積比 <span class="hl">m²:n²</span>
+→ 体積比 <span class="hl">m³:n³</span></div>
+      <div class="fc-note">2乗・3乗になる点が最重要！</div>
+    </div>
+  </div>
+</div>
+
+<!-- 円周角 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">円周角の定理</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <circle cx="35" cy="35" r="27" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
+      <path d="M 13 53 A 27 27 0 0 0 57 53" fill="none" stroke="#4ecdc4" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="35" y1="35" x2="13" y2="53" stroke="#ffd166" stroke-width="1.5"/>
+      <line x1="35" y1="35" x2="57" y2="53" stroke="#ffd166" stroke-width="1.5"/>
+      <line x1="35" y1="8"  x2="13" y2="53" stroke="#ff6b6b" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <line x1="35" y1="8"  x2="57" y2="53" stroke="#ff6b6b" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <circle cx="35" cy="35" r="2.2" fill="#ffd166"/>
+      <circle cx="35" cy="8"  r="2.2" fill="#ff6b6b"/>
+      <text x="25" y="45" font-size="8.5" fill="#ffd166">2α</text>
+      <text x="28" y="14" font-size="8.5" fill="#ff6b6b">α</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">円周角 = <span class="hl">中心角 × 1/2</span></div>
+      <div class="fc-note">同じ弧に対する円周角はすべて等しい</div>
+    </div>
+  </div>
+</div>
+
+<!-- 円周角の定理（特別な場合） -->
+<div class="formula-card c-purple">
+  <div class="fc-label">円周角の定理（特別な場合）</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="70" viewBox="0 0 70 70">
+      <circle cx="35" cy="35" r="27" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
+      <line x1="8" y1="35" x2="62" y2="35" stroke="#4ecdc4" stroke-width="1.8"/>
+      <circle cx="8"  cy="35" r="2.5" fill="#4ecdc4"/>
+      <circle cx="62" cy="35" r="2.5" fill="#4ecdc4"/>
+      <circle cx="35" cy="8"  r="2.5" fill="#ff6b6b"/>
+      <line x1="8"  y1="35" x2="35" y2="8" stroke="#ff6b6b" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <line x1="62" y1="35" x2="35" y2="8" stroke="#ff6b6b" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <polyline points="29,11 32,17 38,14" fill="none" stroke="#ffd166" stroke-width="1.2"/>
+      <text x="4"  y="48" font-size="8" fill="#4ecdc4">A</text>
+      <text x="61" y="48" font-size="8" fill="#4ecdc4">B</text>
+      <text x="36" y="7"  font-size="8" fill="#ff6b6b">P</text>
+      <text x="15" y="14" font-size="8" fill="#ffd166">90°</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">直径に対する
+円周角 = <span class="hl">90°</span></div>
+      <div class="fc-note">AB が直径 → 円周上の P に対し ∠APB=90°</div>
+    </div>
+  </div>
+</div>
+
+<!-- 接弦定理 -->
+<div class="formula-card c-purple">
+  <div class="fc-label">接弦定理</div>
+  <div class="fc-with-fig">
+    <svg class="fc-fig" width="70" height="72" viewBox="0 0 70 72">
+      <circle cx="35" cy="33" r="24" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
+      <line x1="4"  y1="57" x2="66" y2="57" stroke="#4ecdc4" stroke-width="1.8"/>
+      <circle cx="35" cy="57" r="2.5" fill="#4ecdc4"/>
+      <circle cx="57" cy="22" r="2.5" fill="#ff6b6b"/>
+      <line x1="35" y1="57" x2="57" y2="22" stroke="#ff6b6b" stroke-width="1.4"/>
+      <path d="M 49 57 A 14 14 0 0 0 35 43" fill="none" stroke="#ffd166" stroke-width="1.2" stroke-dasharray="2,2"/>
+      <text x="47" y="53" font-size="8.5" fill="#ffd166">α</text>
+      <circle cx="14" cy="21" r="2.5" fill="#a78bfa"/>
+      <line x1="14" y1="21" x2="35" y2="57" stroke="#a78bfa80" stroke-width="1.1" stroke-dasharray="2,2"/>
+      <line x1="14" y1="21" x2="57" y2="22" stroke="#a78bfa80" stroke-width="1.1" stroke-dasharray="2,2"/>
+      <text x="3"  y="27" font-size="7.5" fill="#a78bfa">α</text>
+      <text x="33" y="68" font-size="8"  fill="#4ecdc4">T</text>
+      <text x="59" y="21" font-size="8"  fill="#ff6b6b">A</text>
+    </svg>
+    <div class="fc-body">
+      <div class="fc-formula">接線と弦のなす角
+= <span class="hl">その弦の弧の円周角</span></div>
+      <div class="fc-note">接線と弦 TA のなす角 α = 弧 TA に対する円周角 α</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /formula-grid 図形 -->
+
+<div style="text-align:center;margin-top:36px">
+  <button onclick="switchView('quiz')" style="padding:13px 34px;background:linear-gradient(135deg,var(--gold),#f0b429);color:var(--bg);border:none;border-radius:11px;font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:.97rem;cursor:pointer;letter-spacing:.05em;transition:all .2s;box-shadow:0 4px 18px rgba(255,209,102,.18)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 26px rgba(255,209,102,.32)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 18px rgba(255,209,102,.18)'">
+    ⚡ クイズで腕試しする →
+  </button>
+</div>
+</div><!-- /view-ref -->
+
+<div id="view-quiz" class="view">
+  <div class="quiz-meta">
+    <div class="q-progress-wrap"><div class="q-progress-bar" id="qProgress" style="width:0%"></div></div>
+    <div class="q-counter" id="qCounter">0 / 0</div>
+  </div>
+  <div class="quiz-cats" id="quizCats"></div>
+  <div id="quizArea"></div>
+  <div class="result-card" id="resultCard"></div>
+</div>
+
+<script>
+const QUESTIONS=[
+  {cat:"計算",tag:"tag-calc",q:"有理化：1/√2 を変形すると？",hint:"分母・分子に √2 をかける",choices:["√2/2","1/2","√2","2√2"],ans:0,exp:"1/√2 = √2/(√2×√2) = √2/2"},
+  {cat:"計算",tag:"tag-calc",q:"乗法公式①：(x+3)(x−5) を展開すると？",hint:"(x+a)(x+b)=x²+(a+b)x+ab",choices:["x²−2x−15","x²+2x−15","x²−2x+15","x²+2x+15"],ans:0,exp:"係数=(3−5)=−2、定数=3×(−5)=−15\nx²−2x−15"},
+  {cat:"計算",tag:"tag-calc",q:"乗法公式②：(x+4)(x−4) を展開すると？",hint:"(a+b)(a−b)=a²−b²",choices:["x²−16","x²+16","x²−8x−16","(x−4)²"],ans:0,exp:"(x+4)(x−4)=x²−4²=x²−16"},
+  {cat:"計算",tag:"tag-calc",q:"乗法公式③：(x+5)² を展開すると？",hint:"(a+b)²=a²+2ab+b²",choices:["x²+10x+25","x²+25","x²+5x+25","x²−10x+25"],ans:0,exp:"x²+2×x×5+5²=x²+10x+25"},
+  {cat:"計算",tag:"tag-calc",q:"乗法公式④：(x−3)² を展開すると？",hint:"(a−b)²=a²−2ab+b²",choices:["x²−6x+9","x²+6x+9","x²−9","x²−3x+9"],ans:0,exp:"x²−2×x×3+3²=x²−6x+9"},
+
+  {cat:"√語呂",tag:"tag-sqrt",q:"√2 の近似値は？",hint:"語呂：一夜一夜に人見頃",choices:["1.414","1.732","2.236","1.618"],ans:0,exp:"√2≈1.41421356…\n「一夜一夜に人見頃」\nひとよ・ひとよに・ひとみごろ"},
+  {cat:"√語呂",tag:"tag-sqrt",q:"√3 の近似値は？",hint:"語呂：人並みに おおせて悔しい",choices:["1.732","1.414","2.236","1.618"],ans:0,exp:"√3≈1.7320508…\n「人並みに おごれや」\nひとなみに・おごれや"},
+  {cat:"√語呂",tag:"tag-sqrt",q:"√5 の近似値の語呂合わせは？",hint:"√5≈2.2360679…",choices:["富士山麓オウム鳴く","一夜一夜に人見頃","人並みにおおせて悔しい","鳴くよウグイス平安京"],ans:0,exp:"√5≈2.2360679…\n「富士山麓 オウム鳴く」\nふじさんろく・おうむなく"},
+  {cat:"√語呂",tag:"tag-sqrt",q:"45-45-90°の直角三角形の辺の比は？",hint:"1:1:?",choices:["1:1:√2","1:√3:2","1:1:2","1:√2:√3"],ans:0,exp:"45-45-90°（直角二等辺三角形）\n辺の比=1:1:√2\n斜辺=脚×√2"},
+  {cat:"√語呂",tag:"tag-sqrt",q:"30-60-90°の直角三角形の辺の比は？",hint:"最短辺：中間辺：斜辺",choices:["1:√3:2","1:1:√2","1:2:√3","√2:√3:2"],ans:0,exp:"30-60-90°の直角三角形\n辺の比=1:√3:2\n30°の対辺が最短、斜辺が2倍"},
+
+  {cat:"方程式",tag:"tag-eq",q:"二次方程式 ax²+bx+c=0 の解の公式は？",hint:"x=?",choices:["(−b±√(b²−4ac))/2a","(−b±√(b²+4ac))/2a","(b±√(b²−4ac))/2a","(−b±√(b²−4ac))/a"],ans:0,exp:"x=(−b±√(b²−4ac))/2a\n分母は 2a（aだけでない！）"},
+  {cat:"方程式",tag:"tag-eq",q:"x²−5x+6=0 の解は？",hint:"因数分解か解の公式で",choices:["x=2 または x=3","x=−2 または x=−3","x=1 または x=6","x=−1 または x=−6"],ans:0,exp:"(x−2)(x−3)=0\nx=2 または x=3"},
+
+  {cat:"関数",tag:"tag-func",q:"y=3x のとき x=4 のとき y は？",hint:"y=ax に代入",choices:["12","7","3/4","4/3"],ans:0,exp:"y=3×4=12"},
+  {cat:"関数",tag:"tag-func",q:"一次関数 y=−2x+5 の傾きと y 切片は？",hint:"y=ax+b",choices:["傾き=−2、y切片=5","傾き=5、y切片=−2","傾き=2、y切片=5","傾き=−2、y切片=−5"],ans:0,exp:"y=ax+bで a=傾き、b=y切片\ny=−2x+5 → 傾き=−2、y切片=5"},
+  {cat:"関数",tag:"tag-func",q:"y=3x² で x が 2→5 に変化するときの変化の割合は？",hint:"y=ax²の裏ワザ：a(p+q)",choices:["21","9","15","18"],ans:0,exp:"3×(2+5)=3×7=21"},
+
+  {cat:"図形",tag:"tag-geom",q:"半径4cmの円の面積は？",hint:"S=πr²",choices:["16π cm²","8π cm²","4π cm²","32π cm²"],ans:0,exp:"π×4²=16π cm²"},
+  {cat:"図形",tag:"tag-geom",q:"半径6cm・中心角90°のおうぎ形の面積は？",hint:"πr²×a/360",choices:["9π cm²","36π cm²","6π cm²","18π cm²"],ans:0,exp:"π×36×(1/4)=9π cm²"},
+  {cat:"図形",tag:"tag-geom",q:"母線l=8cm・底面半径r=3cmの円錐の表面積は？",hint:"πrl+πr²",choices:["33π cm²","24π cm²","9π cm²","48π cm²"],ans:0,exp:"側面=π×3×8=24π、底面=9π\n表面積=33π cm²"},
+  {cat:"図形",tag:"tag-geom",q:"母線l=10cm・底面半径r=3cmの円錐の展開図の中心角は？",hint:"360×r/l",choices:["108°","120°","90°","72°"],ans:0,exp:"360×(3/10)=108°"},
+  {cat:"図形",tag:"tag-geom",q:"底面積20cm²・高さ6cmの円錐の体積は？",hint:"底面積×高さ×1/3",choices:["40 cm³","120 cm³","60 cm³","20 cm³"],ans:0,exp:"20×6×(1/3)=40 cm³"},
+  {cat:"図形",tag:"tag-geom",q:"半径3cmの球の体積は？",hint:"(4/3)πr³",choices:["36π cm³","12π cm³","27π cm³","108π cm³"],ans:0,exp:"(4/3)π×27=36π cm³"},
+  {cat:"図形",tag:"tag-geom",q:"直方体 2×3×6cm の空間対角線の長さは？",hint:"√(a²+b²+c²)",choices:["7 cm","√41 cm","√45 cm","5 cm"],ans:0,exp:"√(4+9+36)=√49=7 cm"},
+  {cat:"図形",tag:"tag-geom",q:"二等辺三角形の性質として正しいのは？",hint:"二等辺三角形の性質",choices:["底角が等しい","3角がすべて等しい","底角は頂角の2倍","底角の和は90°"],ans:0,exp:"二等辺三角形：2辺が等しい\n→底角が等しい、頂角の二等分線⊥底辺"},
+  {cat:"図形",tag:"tag-geom",q:"正三角形の1辺の長さ a のとき面積は？",hint:"面積=√3/4×a²",choices:["√3/4×a²","√3/2×a²","a²/2","√3×a²"],ans:0,exp:"正三角形の面積=√3/4×a²\n高さ=√3/2×aから導出"},
+  {cat:"図形",tag:"tag-geom",q:"ひし形の特徴は？",hint:"特殊な平行四辺形",choices:["4辺が等しく対角線が垂直に交わる","4角が直角","4辺が等しく対角線が等しい","対角線が等しく垂直"],ans:0,exp:"ひし形：4辺がすべて等しい\n対角線は垂直に交わる（長さは等しいとは限らない）"},
+  {cat:"図形",tag:"tag-geom",q:"相似比が3:5のとき面積比は？",hint:"面積比=m²:n²",choices:["9:25","3:5","27:125","6:10"],ans:0,exp:"面積比=3²:5²=9:25\n（体積比なら27:125）"},
+  {cat:"図形",tag:"tag-geom",q:"△ABC でM,NがAB,ACの中点のとき MN は？",hint:"中点連結定理",choices:["BC/2でBCに平行","BCと等しく平行","BC/3でBCに平行","2BCでBCに平行"],ans:0,exp:"中点連結定理：MN∥BC かつ MN=BC/2"},
+  {cat:"図形",tag:"tag-geom",q:"△ABCの角Aの二等分線がBCと交わる点Dについて BD:DC は？",hint:"角の二等分線と辺の比",choices:["AB:AC","AC:AB","AB:BC","BC:AB"],ans:0,exp:"BD:DC=AB:AC\n角の二等分線の定理"},
+  {cat:"図形",tag:"tag-geom",q:"中心角80°に対する円周角は？",hint:"円周角=中心角/2",choices:["40°","80°","160°","20°"],ans:0,exp:"円周角=中心角÷2=80÷2=40°"},
+  {cat:"図形",tag:"tag-geom",q:"直径に対する円周角は何度？",hint:"円周角の定理の特別な場合",choices:["90°","45°","180°","60°"],ans:0,exp:"中心角180°の1/2=90°\n「直径に対する円周角は直角」"},
+  {cat:"図形",tag:"tag-geom",q:"接弦定理の内容は？",hint:"接線と弦のなす角",choices:["接線と弦のなす角=弧の円周角","接線と弦のなす角=中心角","接線と弦は垂直に交わる","接線と弦の長さは等しい"],ans:0,exp:"接弦定理：接線と弦のなす角=その弦が切りとる弧の円周角"},
+  {cat:"図形",tag:"tag-geom",q:"直角三角形で斜辺10cm・他の1辺6cmのとき残りの辺は？",hint:"a²+b²=c²",choices:["8 cm","√64 cm","√136 cm","4 cm"],ans:0,exp:"10²−6²=100−36=64\n√64=8 cm"},
+];
+
+let selectedCat="すべて",pool=[],qIdx=0,score=0,totalAnswered=0,answered=false;
+const cats=["すべて","計算","√語呂","方程式","関数","図形"];
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function switchView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&id==='ref')||(i===1&&id==='quiz')));
+  document.getElementById('view-'+id).classList.add('active');
+  if(id==='quiz')initQuizCats();
+}
+
+function updateHeaderScore(){document.getElementById('headerScore').textContent=`${score} / ${totalAnswered}`;}
+
+function initQuizCats(){
+  const wrap=document.getElementById('quizCats');wrap.innerHTML='';
+  cats.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='qcat-btn'+(c===selectedCat?' active':'');
+    btn.textContent=c;
+    btn.onclick=()=>{selectedCat=c;startQuiz();};
+    wrap.appendChild(btn);
+  });
+}
+
+function startQuiz(){
+  initQuizCats();
+  const base=selectedCat==='すべて'?QUESTIONS:QUESTIONS.filter(q=>q.cat===selectedCat);
+  pool=shuffle(base);qIdx=0;score=0;totalAnswered=0;answered=false;
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('resultCard').innerHTML='';
+  updateHeaderScore();renderQ();
+}
+
+function renderQ(){
+  if(qIdx>=pool.length){showResult();return;}
+  answered=false;const q=pool[qIdx];
+  const sh=shuffle(q.choices.map((c,i)=>({text:c,orig:i})));
+  const nc=sh.findIndex(c=>c.orig===q.ans);
+  document.getElementById('qProgress').style.width=(pool.length?(qIdx/pool.length*100):0)+'%';
+  document.getElementById('qCounter').textContent=`${qIdx+1} / ${pool.length}`;
+
+  // カードを createElement で構築（mobile Chrome の onclick 問題を回避）
+  const area=document.getElementById('quizArea');
+  area.innerHTML='';
+
+  const card=document.createElement('div');card.className='q-card';
+
+  const tag=document.createElement('div');tag.className=`q-cat-tag ${q.tag}`;tag.textContent=q.cat;
+  card.appendChild(tag);
+
+  const qtext=document.createElement('div');qtext.className='q-text';qtext.textContent=q.q;
+  card.appendChild(qtext);
+
+  const hint=document.createElement('div');hint.className='q-formula';hint.textContent=q.hint;
+  card.appendChild(hint);
+
+  const choicesDiv=document.createElement('div');choicesDiv.className='choices';
+  sh.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice';
+    btn.type='button';
+    const key=document.createElement('span');key.className='choice-key';key.textContent=String.fromCharCode(65+i);
+    const label=document.createElement('span');label.textContent=c.text;
+    btn.appendChild(key);btn.appendChild(label);
+    btn.addEventListener('click',function(){choose(btn,i,nc);});
+    btn.addEventListener('touchend',function(e){e.preventDefault();choose(btn,i,nc);});
+    choicesDiv.appendChild(btn);
+  });
+  card.appendChild(choicesDiv);
+
+  const eb=document.createElement('div');eb.className='explain-box';eb.id='explainBox';
+  card.appendChild(eb);
+
+  const nextBtn=document.createElement('button');
+  nextBtn.className='btn-next';nextBtn.id='btnNext';nextBtn.type='button';
+  nextBtn.textContent=qIdx+1<pool.length?'次の問題 →':'結果を見る →';
+  nextBtn.addEventListener('click',nextQ);
+  card.appendChild(nextBtn);
+
+  area.appendChild(card);
+}
+
+function choose(btn,sel,correct){
+  if(answered)return;answered=true;totalAnswered++;
+  document.querySelectorAll('.choice').forEach((b,i)=>{b.disabled=true;if(i===correct)b.classList.add('correct');else if(i===sel&&sel!==correct)b.classList.add('wrong');});
+  const q=pool[qIdx];const ok=sel===correct;if(ok)score++;
+  const eb=document.getElementById('explainBox');
+  eb.className=`explain-box show ${ok?'ok':'ng'}`;
+  eb.innerHTML=`<div class="explain-header">${ok?'✓ 正解！':'✗ 不正解'}</div>${q.exp}`;
+  qIdx++;updateHeaderScore();
+  document.getElementById('qProgress').style.width=(qIdx/pool.length*100)+'%';
+  document.getElementById('qCounter').textContent=`${qIdx} / ${pool.length}`;
+  document.getElementById('btnNext').classList.add('show');
+}
+
+function nextQ(){renderQ();}
+
+function showResult(){
+  document.getElementById('quizArea').innerHTML='';
+  const total=pool.length,pct=total?score/total:0,deg=Math.round(pct*360);
+  let msg='',emoji='';
+  if(pct>=.9){msg='完璧！公式マスター認定 🎉';emoji='🏆';}
+  else if(pct>=.7){msg='よくできました！あと少し！';emoji='⭐';}
+  else if(pct>=.5){msg='半分以上正解！もう一度！';emoji='💪';}
+  else{msg='公式一覧をもう一度確認しよう！';emoji='📖';}
+  const rc=document.getElementById('resultCard');
+  rc.innerHTML='';
+
+  const ring=document.createElement('div');ring.className='result-ring';ring.style.setProperty('--pct',deg+'deg');
+  const inner=document.createElement('div');inner.className='result-score-inner';
+  inner.innerHTML=`${score}<span style="font-size:1rem;color:var(--text2)">/${total}</span>`;
+  ring.appendChild(inner);rc.appendChild(ring);
+
+  const msgEl=document.createElement('div');msgEl.className='result-msg';msgEl.textContent=`${emoji} ${msg}`;rc.appendChild(msgEl);
+  const sub=document.createElement('div');sub.className='result-sub';sub.textContent=`${total}問中 ${score}問正解（正答率 ${Math.round(pct*100)}%）`;rc.appendChild(sub);
+
+  const btns=document.createElement('div');btns.className='result-btns';
+  const b1=document.createElement('button');b1.className='rbtn rbtn-primary';b1.type='button';b1.textContent='もう一度挑戦';b1.addEventListener('click',startQuiz);btns.appendChild(b1);
+  const b2=document.createElement('button');b2.className='rbtn rbtn-secondary';b2.type='button';b2.textContent='📖 公式を見直す';b2.addEventListener('click',()=>switchView('ref'));btns.appendChild(b2);
+  const b3=document.createElement('button');b3.className='rbtn rbtn-secondary';b3.type='button';b3.textContent='全範囲でやり直す';b3.addEventListener('click',()=>{selectedCat='すべて';startQuiz();});btns.appendChild(b3);
+  rc.appendChild(btns);
+  rc.classList.add('show');
+}
+
+initQuizCats();startQuiz();
+</script>
+</body>
+</html>
